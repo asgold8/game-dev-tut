@@ -1,11 +1,18 @@
 const log = (text) => {
   const parent = document.querySelector('#events');
   const el = document.createElement('li');
-  el.innerHTML = text;
+
+  el.innerHTML = sanitizeHTML(text);
 
   parent.appendChild(el);
   parent.scrollTop = parent.scrollHeight;
 };
+
+const sanitizeHTML = (str) => {
+  var temp = document.createElement('div');
+	temp.textContent = str;
+	return temp.innerHTML;
+}
 
 const onChatSubmitted = (sock) => (e) => {
   e.preventDefault();
