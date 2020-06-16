@@ -33,7 +33,8 @@ const getBoard = (canvas, numCells = 20) => {
 
   const fillCell = (x,y,color) => {
     ctx.fillStyle = color;
-    ctx.fillRect(x*cellSize, y*cellSize, cellSize, cellSize);
+    //+1 and -2 to prevent the rectangle from overlapping the grid lines.
+    ctx.fillRect(x*cellSize+1, y*cellSize+1, cellSize-2, cellSize-2);
   };
 
   const drawGrid = () => {
@@ -53,9 +54,18 @@ const getBoard = (canvas, numCells = 20) => {
     ctx.clearRect(0,0, canvas.width, canvas.height);
   };
 
-  const reset = () => {
+  const renderBoard = (board = []) => {
+    board.forEach((row, y) => {
+      row.forEach((color,x) => {
+        color && fillCell(x,y,color);
+      });
+    });
+  };
+
+  const reset = (board) => {
     clear();
     drawGrid();
+    renderBoard(board);
   }
 
   const getCellCoordinates = ( x, y ) => {
@@ -77,9 +87,8 @@ const getBoard = (canvas, numCells = 20) => {
     const { x, y } = getClickCoords(canvas, e);
     sock.emit('turn', getCellCoordinates( x, y ));
   };
-
-  reset();
-
+ 
+  sock.on('board', reset);
   sock.on('message', log);
   sock.on('turn', ({ x, y, color }) => fillCell( x, y, color ));
 
