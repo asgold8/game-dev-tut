@@ -17,6 +17,7 @@ io.on('connection', (sock) => {
 
   //sends to all connections
   sock.on('message',(text) => io.emit('message', text));
+  sock.on('turn', ({ x, y }) => io.emit('turn', { x, y }));
 });
 
 server.on('error', () => {

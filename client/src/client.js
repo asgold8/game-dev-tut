@@ -17,12 +17,43 @@ const onChatSubmitted = (sock) => (e) => {
   sock.emit('message',text);
 };
 
+const getClickCoords = (element, event) => {
+  const { top, left } = element.getBoundingClientRect();
+  const { clientX, clientY } = event;
+
+  return {
+    x: clientX - left,
+    y: clientY - top
+  }
+};
+
+const getBoard = (canvas) => {
+  const ctx = canvas.getContext('2d');
+
+  const fillRect = (x,y,color) => {
+    ctx.fillStyle = color;
+    ctx.fillRect(x - 10, y - 10, 20, 20);
+  }
+
+  return { fillRect };
+};
+
 (() => {
+  const canvas = document.querySelector('canvas');
+  const { fillRect } = getBoard(canvas);
   const sock = io();
 
+  const onClick = (e) => {
+    const { x, y } = getClickCoords(canvas, e);
+    sock.emit('turn', { x, y });
+  };
+
   sock.on('message', log);
+  sock.on('turn', ({ x, y }) => fillRect(x, y));
 
   document
     .querySelector('#chat-form')
     .addEventListener('submit', onChatSubmitted(sock));
+
+  canvas.addEventListener('click', onClick);
 })();
