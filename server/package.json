@@ -1,6 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "license": "MIT",
   "main": "server.js",
   "author": "Alex G.",
   "scripts": {
@@ -10,6 +11,7 @@
   "type": "module",
   "dependencies": {
     "express": "^4.17.1",
+    "randomcolor": "^0.5.4",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
